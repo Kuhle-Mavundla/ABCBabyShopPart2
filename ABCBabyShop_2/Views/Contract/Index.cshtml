@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ABCBabyShop_2.Models.Contract>
+@{
+    ViewData["Title"] = "Contracts";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h2 class="text-center mb-4"> Contracts</h2>
+
+            <div class="d-flex justify-content-end mb-3">
+                <a class="btn btn-pink" style="font-size: 1rem;" href="/Contract/Upload"> Upload Contract</a>
+            </div>
+
+            <div class="table-responsive shadow rounded-3">
+                <table class="table table-striped table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 70%;">File Name</th>
+                            <th style="width: 30%;">Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var contract in Model)
+                        {
+                            <tr>
+                                <td class="text-truncate">@contract.FileName</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm px-3" href="@contract.FileUrl"> Download</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

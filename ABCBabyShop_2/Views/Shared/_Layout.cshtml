@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ABC Baby Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFF0F5;
+        }
+
+        .navbar {
+            background-color: #FFC0CB;
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">ABC Baby Shop</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/Customer">Customers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Product">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Order">Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Contract">Contracts</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

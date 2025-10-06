@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ABCBabyShop_2.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h2>Orders</h2>
+<a class="btn btn-pink mb-3" href="/Order/Create">Add Order</a>
+
+<div class="row">
+    @foreach (var order in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card p-3">
+                <p>Customer ID: @order.CustomerId</p>
+                <p>Product ID: @order.ProductId</p>
+                <p>Quantity: @order.Quantity</p>
+                <p>Order Date: @order.OrderDate.ToShortDateString()</p>
+                <a class="btn btn-danger" href="/Order/Delete?rowKey=@order.RowKey">Delete</a>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,23 @@
+﻿@model ABCBabyShop_2.Models.Order
+@{
+    ViewData["Title"] = "Add Order";
+}
+
+<h2>Add Order</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label class="form-label">Customer ID</label>
+        <input class="form-control" asp-for="CustomerId" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Product ID</label>
+        <input class="form-control" asp-for="ProductId" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Quantity</label>
+        <input class="form-control" asp-for="Quantity" type="number" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a class="btn btn-secondary" href="/Order">Cancel</a>
+</form>

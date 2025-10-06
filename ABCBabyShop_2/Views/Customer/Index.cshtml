@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ABCBabyShop_2.Models.Customer>
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h2>Customers</h2>
+<a class="btn btn-pink mb-3" href="/Customer/Create">Add Customer</a>
+
+<div class="row">
+    @foreach (var customer in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card p-3">
+                <h5>@customer.CustomerName</h5>
+                <p>Email: @customer.Email</p>
+                <a class="btn btn-danger" href="/Customer/Delete?rowKey=@customer.RowKey">Delete</a>
+            </div>
+        </div>
+    }
+</div>
