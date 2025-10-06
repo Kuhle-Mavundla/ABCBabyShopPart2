@@ -4,6 +4,10 @@
 }
 
 <h2>Products</h2>
+<form method="get" asp-action="Index">
+    <input type="text" name="search" placeholder="Search by Name" class="form-control mb-2" />
+    <button type="submit" class="btn btn-primary mb-2">Search</button>
+</form>
 <a class="btn btn-pink mb-3" href="/Product/Create">Add Product</a>
 
 <div class="row">
