@@ -4,6 +4,13 @@
 }
 
 <h2>Orders</h2>
+<form method="get" asp-action="Index" class="mb-3">
+    <input type="text" name="searchCustomer" placeholder="Customer ID" class="form-control mb-2" />
+    <input type="text" name="searchProduct" placeholder="Product ID" class="form-control mb-2" />
+    <input type="date" name="startDate" class="form-control mb-2" />
+    <input type="date" name="endDate" class="form-control mb-2" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
 <a class="btn btn-pink mb-3" href="/Order/Create">Add Order</a>
 
 <div class="row">
