@@ -45,5 +45,21 @@ namespace ABCBabyShop_2.Controllers
             _tableService.DeleteEntity("Product", "Product", rowKey);
             return RedirectToAction("Index");
         }
+        public IActionResult Index(string search)
+        {
+            var products = _tableService.GetAllEntities<Product>("Product");
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+                products = products.Where(p =>
+                    (!string.IsNullOrEmpty(p.ProductName) && p.ProductName.ToLower().Contains(search)) ||
+                    (!string.IsNullOrEmpty(p.PartitionKey) && p.PartitionKey.ToLower().Contains(search))                   
+                ).ToList();
+            }
+
+            return View(products);
+        }
+
     }
 }
