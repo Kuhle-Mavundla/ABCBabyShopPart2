@@ -8,7 +8,7 @@ using Azure.Storage.Queues.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace ABCBabyShop3.Functions
+namespace HttpFunctions
 {
     
     public class OrderQueueMessage

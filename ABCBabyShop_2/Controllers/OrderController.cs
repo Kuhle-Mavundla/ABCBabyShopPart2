@@ -17,10 +17,24 @@ namespace ABCBabyShop_2.Controllers
             _queueService = queueService;
           
         }
-
-        public IActionResult Index()
+        //aDD A Advanced Search Functionality so that it becomes easier to find specific orders
+        //based on criteria like customer name, product name, or date range.
+        public IActionResult Index(string searchCustomer, string searchProduct, DateTime? startDate, DateTime? endDate)
         {
             var orders = _tableService.GetAllEntities<Order>("Order");
+
+            if (!string.IsNullOrWhiteSpace(searchCustomer))
+                orders = orders.Where(o => !string.IsNullOrEmpty(o.CustomerId) && o.CustomerId.Contains(searchCustomer, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (!string.IsNullOrWhiteSpace(searchProduct))
+                orders = orders.Where(o => !string.IsNullOrEmpty(o.ProductId) && o.ProductId.Contains(searchProduct, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (startDate.HasValue)
+                orders = orders.Where(o => o.OrderDate >= startDate.Value).ToList();
+
+            if (endDate.HasValue)
+                orders = orders.Where(o => o.OrderDate <= endDate.Value).ToList();
+
             return View(orders);
         }
 
@@ -54,23 +68,6 @@ namespace ABCBabyShop_2.Controllers
             _tableService.DeleteEntity("Order", "Order", rowKey);
             return RedirectToAction("Index");
         }
-        public IActionResult Index(string searchCustomer, string searchProduct, DateTime? startDate, DateTime? endDate)
-        {
-            var orders = _tableService.GetAllEntities<Order>("Order");
-
-            if (!string.IsNullOrWhiteSpace(searchCustomer))
-                orders = orders.Where(o => !string.IsNullOrEmpty(o.CustomerId) && o.CustomerId.Contains(searchCustomer, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            if (!string.IsNullOrWhiteSpace(searchProduct))
-                orders = orders.Where(o => !string.IsNullOrEmpty(o.ProductId) && o.ProductId.Contains(searchProduct, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            if (startDate.HasValue)
-                orders = orders.Where(o => o.OrderDate >= startDate.Value).ToList();
-
-            if (endDate.HasValue)
-                orders = orders.Where(o => o.OrderDate <= endDate.Value).ToList();
-
-            return View(orders);
-        }
+        
     }
 }

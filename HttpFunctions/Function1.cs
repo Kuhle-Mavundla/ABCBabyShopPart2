@@ -13,9 +13,8 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace ABCBabyShop.Functions
+namespace HttpFunctions
 {
-    // DTO for baby product order
     public class BabyOrderDto
     {
         public string? PartitionKey { get; set; } = "Order";
@@ -47,7 +46,7 @@ namespace ABCBabyShop.Functions
             _fileShareName = Environment.GetEnvironmentVariable("AzureStorage:FileShareName") ?? "babyorders";
         }
 
-        // -------------------- POST /storetotable --------------------
+       
         [Function("storetotable")]
         public async Task<HttpResponseData> StoreToTable(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "storetotable")] HttpRequestData req)
@@ -83,7 +82,7 @@ namespace ABCBabyShop.Functions
 
                 await tableClient.AddEntityAsync(entity);
 
-                // Add message to queue
+                // Adds the message to the queue
                 var queueClient = new QueueClient(_connectionString, _queueName);
                 await queueClient.CreateIfNotExistsAsync();
 
@@ -112,7 +111,6 @@ namespace ABCBabyShop.Functions
             }
         }
 
-        // -------------------- GET /getorders --------------------
         [Function("getorders")]
         public async Task<HttpResponseData> GetOrders(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "getorders")] HttpRequestData req)
@@ -142,7 +140,6 @@ namespace ABCBabyShop.Functions
             }
         }
 
-        // -------------------- GET /processqueue --------------------
         [Function("processqueue")]
         public async Task<HttpResponseData> ProcessQueue(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "processqueue")] HttpRequestData req)
@@ -156,7 +153,7 @@ namespace ABCBabyShop.Functions
                 var tableClient = new TableClient(_connectionString, "ProcessedBabyOrders");
                 await tableClient.CreateIfNotExistsAsync();
 
-                // Preload queue if empty
+                // Preload queue if empty as a form of validation
                 var peek = await queueClient.PeekMessagesAsync(1);
                 if (!peek.Value.Any())
                 {
@@ -212,7 +209,7 @@ namespace ABCBabyShop.Functions
             }
         }
 
-        // -------------------- POST /uploadblob --------------------
+       
         [Function("uploadblob")]
         public async Task<HttpResponseData> UploadBlob(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "uploadblob")] HttpRequestData req)
@@ -247,7 +244,7 @@ namespace ABCBabyShop.Functions
             }
         }
 
-        // -------------------- GET /getblobs --------------------
+       
         [Function("getblobs")]
         public async Task<HttpResponseData> GetBlobs(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "getblobs")] HttpRequestData req)
@@ -279,7 +276,7 @@ namespace ABCBabyShop.Functions
             }
         }
 
-        // -------------------- POST /writefile --------------------
+        
         [Function("writefile")]
         public async Task<HttpResponseData> WriteFile(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "writefile")] HttpRequestData req)
@@ -315,7 +312,7 @@ namespace ABCBabyShop.Functions
             }
         }
 
-        // -------------------- GET /getfiles --------------------
+        
         [Function("getfiles")]
         public async Task<HttpResponseData> GetFiles(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "getfiles")] HttpRequestData req)

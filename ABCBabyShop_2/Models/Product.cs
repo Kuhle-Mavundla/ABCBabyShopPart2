@@ -3,6 +3,7 @@ using Azure.Data.Tables;
 
 namespace ABCBabyShop_2.Models
 {
+    // Declaration of Product class implementing ITableEntity for Azure Table Storage
     public class Product : ITableEntity
     {
         public string PartitionKey { get; set; } = "Product";

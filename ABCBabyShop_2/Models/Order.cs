@@ -3,6 +3,7 @@ using Azure.Data.Tables;
 
 namespace ABCBabyShop_2.Models
 {
+    // Declaration of Order class implementing ITableEntity for Azure Table Storage
     public class Order : ITableEntity
     {
         public string PartitionKey { get; set; } = "Order";

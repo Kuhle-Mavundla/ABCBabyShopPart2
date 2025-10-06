@@ -15,7 +15,7 @@
     {
         <div class="col-md-4 mb-3">
             <div class="card p-3">
-                <img src="@product.ImageUrl" class="img-fluid rounded mb-2" />
+                <img src="@product.ImageUrl" alt="@product.ProductName" class="img-fluid rounded mb-2" style="width:100%; height:auto; max-width:600px;" />
                 <h5>@product.ProductName</h5>
                 <p>Price: @product.Price.ToString("C")</p>
                 <a class="btn btn-danger" href="/Product/Delete?rowKey=@product.RowKey">Delete</a>

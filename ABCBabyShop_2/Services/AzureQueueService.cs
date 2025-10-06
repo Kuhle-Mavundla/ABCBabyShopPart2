@@ -20,14 +20,13 @@ namespace ABCBabyShop_2.Services
             await _queueClient.SendMessageAsync(message);
         }
 
-        // Optional: receive one message (for admin/testing). Not used by UI by default.
         public async Task<QueueMessage?> ReceiveMessageAsync()
         {
             var response = await _queueClient.ReceiveMessagesAsync(maxMessages: 1);
             var msg = response.Value.FirstOrDefault();
             if (msg != null)
             {
-                // Delete after reading to avoid reprocessing unintentionally
+                // tO Delete after reading 
                 await _queueClient.DeleteMessageAsync(msg.MessageId, msg.PopReceipt);
             }
             return msg;

@@ -3,6 +3,7 @@ using Azure.Data.Tables;
 
 namespace ABCBabyShop_2.Models
 {
+    //Declaration of Customer class implementing ITableEntity for Azure Table Storage
     public class Customer : ITableEntity
     {
         
