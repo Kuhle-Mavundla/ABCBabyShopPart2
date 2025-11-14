@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 
-namespace ABCBabyShop_2.Services
+namespace ABCBabyShop_3.Services
 {
     public class AzureQueueService
     {

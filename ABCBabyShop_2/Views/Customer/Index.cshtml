@@ -1,20 +1,24 @@
-﻿@model IEnumerable<ABCBabyShop_2.Models.Customer>
+﻿@model IEnumerable<ABCBabyShop_3.Models.Customer>
 @{
     ViewData["Title"] = "Customers";
 }
-
-<h2>Customers</h2>
-<a class="btn btn-pink mb-3" href="/Customer/Create">Add Customer</a>
-
-<div class="row">
-    @foreach (var customer in Model)
-    {
-        <div class="col-md-4 mb-3">
-            <div class="card p-3">
-                <h5>@customer.CustomerName</h5>
-                <p>Email: @customer.Email</p>
-                <a class="btn btn-danger" href="/Customer/Delete?rowKey=@customer.RowKey">Delete</a>
-            </div>
-        </div>
-    }
-</div>
+<h1>Customers</h1>
+<p><a class="btn btn-success" href="/Customer/Create">Register new</a></p>
+<table class="table">
+    <thead><tr><th>Name</th><th>Email</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.CustomerName</td>
+                <td>@c.Email</td>
+                <td>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('Delete this customer?');">
+                        <input type="hidden" name="id" value="@c.Id" />
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

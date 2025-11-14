@@ -1,17 +1,16 @@
-﻿using Azure;
-using Azure.Data.Tables;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ABCBabyShop_2.Models
+namespace ABCBabyShop_3.Models
 {
-    // Declaration of Product class implementing ITableEntity for Azure Table Storage
-    public class Product : ITableEntity
+    public class Product
     {
-        public string PartitionKey { get; set; } = "Product";
-        public string RowKey { get; set; } // Unique ID
+        [Key]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         public string? ProductName { get; set; }
+
         public double Price { get; set; }
-        public string? ImageUrl { get; set; } // Blob URL
-        public ETag ETag { get; set; }
-        public DateTimeOffset? Timestamp { get; set; }
+
+        public string? ImageUrl { get; set; }
     }
 }

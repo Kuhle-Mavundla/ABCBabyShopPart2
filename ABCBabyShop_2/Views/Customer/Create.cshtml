@@ -1,23 +1,24 @@
-﻿@model ABCBabyShop_2.Models.Customer
+﻿@model ABCBabyShop_3.Models.Customer
 @{
-    ViewData["Title"] = "Add Customer";
+    ViewData["Title"] = "Register";
 }
-
-<h2>Add Customer</h2>
-
-<form asp-action="Create" method="post">
+<h2>Register</h2>
+<form method="post" asp-action="Create">
     <div class="mb-3">
         <label class="form-label">Name</label>
-        <input class="form-control" asp-for="CustomerName" required />
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label class="form-label">Email</label>
-        <input class="form-control" asp-for="Email" type="email" required />
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label class="form-label">Password</label>
-        <input class="form-control" asp-for="Password" type="password" required />
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a class="btn btn-secondary" href="/Customer">Cancel</a>
+    <button class="btn btn-primary">Register</button>
+    <a class="btn btn-link" href="/Customer/Login">Already have account?</a>
 </form>

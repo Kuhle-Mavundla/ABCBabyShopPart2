@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 
-namespace ABCBabyShop_2.Services
+namespace ABCBabyShop_3.Services
 {
     public class AzureBlobService
     {

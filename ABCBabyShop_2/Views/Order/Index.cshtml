@@ -1,29 +1,27 @@
-﻿@model IEnumerable<ABCBabyShop_2.Models.Order>
+﻿@model IEnumerable<ABCShop_3.Models.Order>
 @{
     ViewData["Title"] = "Orders";
 }
+<h1>Orders</h1>
 
-<h2>Orders</h2>
-<form method="get" asp-action="Index" class="mb-3">
-    <input type="text" name="searchCustomer" placeholder="Customer ID" class="form-control mb-2" />
-    <input type="text" name="searchProduct" placeholder="Product ID" class="form-control mb-2" />
-    <input type="date" name="startDate" class="form-control mb-2" />
-    <input type="date" name="endDate" class="form-control mb-2" />
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
-<a class="btn btn-pink mb-3" href="/Order/Create">Add Order</a>
-
-<div class="row">
-    @foreach (var order in Model)
-    {
-        <div class="col-md-4 mb-3">
-            <div class="card p-3">
-                <p>Customer ID: @order.CustomerId</p>
-                <p>Product ID: @order.ProductId</p>
-                <p>Quantity: @order.Quantity</p>
-                <p>Order Date: @order.OrderDate.ToShortDateString()</p>
-                <a class="btn btn-danger" href="/Order/Delete?rowKey=@order.RowKey">Delete</a>
-            </div>
-        </div>
-    }
-</div>
+<table class="table">
+    <thead><tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Qty</th><th>Date</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Id</td>
+                <td>@o.CustomerId</td>
+                <td>@o.ProductId</td>
+                <td>@o.Quantity</td>
+                <td>@o.OrderDate.ToLocalTime()</td>
+                <td>
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('Delete order?');">
+                        <input type="hidden" name="id" value="@o.Id" />
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Files.Shares;
 using Azure.Storage.Files.Shares.Models;
 
-namespace ABCBabyShop_2.Services
+namespace ABCBabyShop_3.Services
 {
     public class AzureFileService
     {

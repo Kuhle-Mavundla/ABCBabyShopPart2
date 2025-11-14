@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ABCBabyShop_3.Models.Order>
+@{
+    ViewData["Title"] = "Checkout Success";
+}
+<h2>Checkout Successful</h2>
+<p>Your order(s) have been placed. Summary:</p>
+
+<table class="table">
+    <thead><tr><th>Order ID</th><th>Product ID</th><th>Qty</th><th>Date</th></tr></thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Id</td>
+                <td>@o.ProductId</td>
+                <td>@o.Quantity</td>
+                <td>@o.OrderDate.ToLocalTime()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="/Product">Back to products</a>

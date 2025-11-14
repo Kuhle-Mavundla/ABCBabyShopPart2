@@ -1,0 +1,18 @@
+﻿@model ABCBabyShop_3.Models.Product
+@{
+    ViewData["Title"] = "Product Details";
+}
+<h2>@Model.ProductName</h2>
+<p><strong>Price:</strong> R@Model.Price</p>
+@if (!string.IsNullOrEmpty(Model.ImageUrl))
+{
+    <img src="@Model.ImageUrl" alt="@Model.ProductName" style="max-width:300px" />
+}
+<p>
+    <form asp-action="AddToCart" method="post" class="d-inline">
+        <input type="hidden" name="productId" value="@Model.Id" />
+        <input type="hidden" name="quantity" value="1" />
+        <button class="btn btn-success">Add to Cart</button>
+    </form>
+    <a class="btn btn-secondary" href="/Product">Back</a>
+</p>

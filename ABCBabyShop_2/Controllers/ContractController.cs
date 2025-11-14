@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ABCBabyShop_2.Services;
-using ABCBabyShop_2.Models;
+using ABCBabyShop_3.Services;
+using ABCBabyShop_3.Models;
 
-namespace ABCBabyShop_2.Controllers
+namespace ABCBabyShop_3.Controllers
 {
     public class ContractController : Controller
     {

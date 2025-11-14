@@ -1,20 +1,19 @@
-﻿using Azure;
-using Azure.Data.Tables;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ABCBabyShop_2.Models
+namespace ABCBabyShop_3.Models
 {
-    //Declaration of Customer class implementing ITableEntity for Azure Table Storage
-    public class Customer : ITableEntity
+    public class Customer
     {
-        
-        public string PartitionKey { get; set; } = "Customer";
-        public string RowKey { get; set; } // Unique ID
+        [Key]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        [Required]
         public string? CustomerName { get; set; }
+
+        [Required, EmailAddress]
         public string? Email { get; set; }
 
-        public string? Password { get; set; }
-
-        public ETag ETag { get; set; }
-        public DateTimeOffset? Timestamp { get; set; }
+        [Required]
+        public string? Password { get; set; } // For POE: keep simple (hashed ideally in prod)
     }
 }

@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using ABCBabyShop_2.Models;
+using ABCBabyShop_3.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ABCBabyShop_2.Controllers
+namespace ABCBabyShop_3.Controllers
 {
     public class HomeController : Controller
     {

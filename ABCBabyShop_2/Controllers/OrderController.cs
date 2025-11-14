@@ -1,27 +1,26 @@
-﻿using ABCBabyShop_2.Models;
-using ABCBabyShop_2.Services;
+﻿
+using ABCBabyShop_3.Models;
+using ABCBabyShop_3.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace ABCBabyShop_2.Controllers
+namespace ABCBabyShop_3.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly AzureTableService _tableService;
-        private readonly AzureQueueService _queueService;
- 
+        private readonly AzureSqlService _sql;
+        private readonly AzureQueueService _queue;
+        private const string SessionCartKey = "CartItems";
 
-        public OrderController(AzureTableService tableService, AzureQueueService queueService)
+        public OrderController(AzureSqlService sql, AzureQueueService queue)
         {
-            _tableService = tableService;
-            _queueService = queueService;
-          
+            _sql = sql;
+            _queue = queue;
         }
-        //aDD A Advanced Search Functionality so that it becomes easier to find specific orders
-        //based on criteria like customer name, product name, or date range.
-        public IActionResult Index(string searchCustomer, string searchProduct, DateTime? startDate, DateTime? endDate)
+
+        public async Task<IActionResult> Index(string searchCustomer, string searchProduct, DateTime? startDate, DateTime? endDate)
         {
-            var orders = _tableService.GetAllEntities<Order>("Order");
+            var orders = await _sql.GetAllOrdersAsync();
 
             if (!string.IsNullOrWhiteSpace(searchCustomer))
                 orders = orders.Where(o => !string.IsNullOrEmpty(o.CustomerId) && o.CustomerId.Contains(searchCustomer, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -38,36 +37,92 @@ namespace ABCBabyShop_2.Controllers
             return View(orders);
         }
 
-        public IActionResult Create() => View();
+        // Checkout action reads cart from session and creates orders
+        public async Task<IActionResult> Checkout()
+        {
+            var customerId = HttpContext.Session.GetString("CustomerId");
+            if (string.IsNullOrWhiteSpace(customerId))
+            {
+                // enforce login/registration
+                return RedirectToAction("Login", "Customer");
+            }
+
+            var cartJson = HttpContext.Session.GetString(SessionCartKey);
+            var cart = string.IsNullOrEmpty(cartJson)
+                ? new List<CartItem>()
+                : JsonSerializer.Deserialize<List<CartItem>>(cartJson) ?? new List<CartItem>();
+
+            if (!cart.Any()) return RedirectToAction("Index", "Product");
+
+            var createdOrders = new List<Order>();
+
+            foreach (var item in cart)
+            {
+                var order = new Order
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    CustomerId = customerId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    OrderDate = DateTime.UtcNow
+                };
+
+                await _sql.AddOrderAsync(order);
+                createdOrders.Add(order);
+
+                // Send queue message (JSON string)
+                var msg = JsonSerializer.Serialize(new
+                {
+                    OrderId = order.Id,
+                    order.CustomerId,
+                    order.ProductId,
+                    order.Quantity,
+                    order.OrderDate
+                });
+
+                await _queue.SendMessageAsync(msg);
+            }
+
+            // Clear cart
+            HttpContext.Session.Remove(SessionCartKey);
+
+            return View("CheckoutSuccess", createdOrders);
+        }
+
+        public async Task<IActionResult> Create() => View();
 
         [HttpPost]
         public async Task<IActionResult> Create(Order order)
         {
-            order.RowKey = Guid.NewGuid().ToString();
+            order.Id = Guid.NewGuid().ToString();
+            order.OrderDate = DateTime.UtcNow;
 
+            await _sql.AddOrderAsync(order);
 
-          
-            _tableService.AddEntity(order, "Order");
-
-          
             var message = JsonSerializer.Serialize(new
             {
-                OrderId = order.RowKey,
-                CustomerId = order.CustomerId,
-                ProductId = order.ProductId,
-                Quantity = order.Quantity,
-                OrderDate = order.OrderDate
+                OrderId = order.Id,
+                order.CustomerId,
+                order.ProductId,
+                order.Quantity,
+                order.OrderDate
             });
-            await _queueService.SendMessageAsync(message);
 
-            return RedirectToAction("Index");
+            await _queue.SendMessageAsync(message);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(string rowKey)
+        public async Task<IActionResult> Delete(string id)
         {
-            _tableService.DeleteEntity("Order", "Order", rowKey);
-            return RedirectToAction("Index");
+            await _sql.DeleteOrderAsync(id);
+            return RedirectToAction(nameof(Index));
         }
-        
+
+        private class CartItem
+        {
+            public string ProductId { get; set; } = string.Empty;
+            public int Quantity { get; set; }
+        }
     }
 }

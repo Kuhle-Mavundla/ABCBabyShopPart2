@@ -1,7 +1,7 @@
 ﻿using Azure;
 using Azure.Data.Tables;
 
-namespace ABCBabyShop_2.Models
+namespace ABCBabyShop_3.Models
 {
     public class Contract
     {

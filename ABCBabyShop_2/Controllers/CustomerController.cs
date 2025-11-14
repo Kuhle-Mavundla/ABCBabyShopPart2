@@ -1,38 +1,81 @@
-﻿using ABCBabyShop_2.Services;
-using ABCBabyShop_2.Models;
+﻿using ABCBabyShop_3.Models;
+using ABCBabyShop_3.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ABCBabyShop_2.Controllers
+namespace ABCBabyShop_3.Controllers
 {
     public class CustomerController : Controller
     {
-        private readonly AzureTableService _tableService;
+        private readonly AzureSqlService _sql;
 
-        public CustomerController(AzureTableService tableService)
+        public CustomerController(AzureSqlService sql)
         {
-            _tableService = tableService;
+            _sql = sql;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var customers = _tableService.GetAllEntities<Customer>("Customer");
+            var customers = await _sql.GetAllCustomersAsync();
             return View(customers);
         }
 
         public IActionResult Create() => View();
 
         [HttpPost]
-        public IActionResult Create(Customer customer)
+        public async Task<IActionResult> Create(Customer customer)
         {
-            customer.RowKey = Guid.NewGuid().ToString();
-            _tableService.AddEntity(customer, "Customer");
+            // Basic validation already provided by model attributes
+            await _sql.AddCustomerAsync(customer);
+            // After registration redirect to Login
+            return RedirectToAction(nameof(Login));
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _sql.DeleteCustomerAsync(id);
             return RedirectToAction("Index");
         }
 
-        public IActionResult Delete(string rowKey)
+        // Login GET
+        [HttpGet]
+        public IActionResult Login()
         {
-            _tableService.DeleteEntity("Customer", "Customer", rowKey);
-            return RedirectToAction("Index");
+            return View();
+        }
+
+        // Login POST
+        [HttpPost]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ModelState.AddModelError("", "Email and password required.");
+                return View();
+            }
+
+            var customers = await _sql.GetAllCustomersAsync();
+            var user = customers.FirstOrDefault(c =>
+                string.Equals(c.Email, email, StringComparison.OrdinalIgnoreCase)
+                && c.Password == password);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid credentials.");
+                return View();
+            }
+
+            // Save minimal customer data in session
+            HttpContext.Session.SetString("CustomerId", user.Id);
+            HttpContext.Session.SetString("CustomerName", user.CustomerName ?? string.Empty);
+
+            return RedirectToAction("Index", "Product");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("CustomerId");
+            HttpContext.Session.Remove("CustomerName");
+            return RedirectToAction(nameof(Login));
         }
     }
 }

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<(ABCBabyShop_3.Models.Product product, int quantity)>
+@{
+    ViewData["Title"] = "Cart";
+}
+<h2>Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Cart is empty. <a href="/Product">Continue shopping</a></div>
+}
+else
+{
+    <table class="table">
+        <thead><tr><th>Product</th><th>Unit Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
+        <tbody>
+            @foreach (var it in Model)
+            {
+                <tr>
+                    <td>@it.product.ProductName</td>
+                    <td>R@it.product.Price</td>
+                    <td>@it.quantity</td>
+                    <td>R@(it.product.Price* it.quantity)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form asp-controller="Order" asp-action="Checkout" method="post">
+        <button class="btn btn-primary">Checkout</button>
+        <a class="btn btn-secondary" href="/Product">Continue Shopping</a>
+    </form>
+}
